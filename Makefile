@@ -6,8 +6,6 @@ DISK_SIZE ?= 20G
 NODES    ?= node1 node2
 VM_DIR   ?= vm
 SERIAL_PORT ?= 9002
-# Set SUDO=sudo if your user cannot create Docker networks / veths.
-SUDO     ?=
 
 KUBECONFIG ?= $(CURDIR)/kubeconfig.yaml
 KUSTOMIZE  ?= kustomize
@@ -56,14 +54,14 @@ check: ## Fail if required tools are missing
 
 deploy: check ## Create disks and deploy lab
 	touch $(KUBECONFIG) # Initialises the kubeconfig with users' permissions
-	$(SUDO) $(CLAB) deploy -t $(TOPO)
+	$(CLAB) deploy -t $(TOPO)
 
 destroy: ## Tear down the lab
-	$(SUDO) $(CLAB) destroy -t $(TOPO) --cleanup
+	$(CLAB) destroy -t $(TOPO) --cleanup
 
 clean-disks: ## Remove per-node VM disks and OVMF_VARS files
 	@for node in $(NODES); do \
-		$(SUDO) rm -f $(VM_DIR)/$$node/disk.qcow2 \
+		rm -f $(VM_DIR)/$$node/disk.qcow2 \
 			$(VM_DIR)/$$node/OVMF_VARS.fd; \
 	done
 
