@@ -1,1 +1,7 @@
+.envrc
 .envrc.local
+vm
+kubeconfig
+kubeconfig.yaml
+clab-*/
+metalprobe-image/bin/

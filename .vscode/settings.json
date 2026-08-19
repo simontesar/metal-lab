@@ -1,0 +1,14 @@
+{
+  "remote.SSH.defaultForwardedPorts": [
+    { "localPort": 4431, "hostPort": 4431, "name": "node1 Redfish/noVNC" },
+    { "localPort": 4432, "hostPort": 4432, "name": "node2 Redfish/noVNC" },
+    { "localPort": 5901, "hostPort": 5901, "name": "node1 VNC" },
+    { "localPort": 5902, "hostPort": 5902, "name": "node2 VNC" }
+  ],
+  "remote.portsAttributes": {
+    "4431": { "label": "node1 Redfish/noVNC (https://localhost:4431/novnc/vnc.html)" },
+    "4432": { "label": "node2 Redfish/noVNC (https://localhost:4432/novnc/vnc.html)" },
+    "5901": { "label": "node1 VNC" },
+    "5902": { "label": "node2 VNC" }
+  }
+}
