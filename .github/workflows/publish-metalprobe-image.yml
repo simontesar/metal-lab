@@ -61,3 +61,9 @@ jobs:
     - name: Push metalprobe image
       if: github.event_name != 'pull_request'
       run: make metalprobe-image-push
+
+    - name: Tag and push master image
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      run: |
+        ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:master"
+        ironcore-image push "${METALPROBE_IMAGE_NAME}:master"
