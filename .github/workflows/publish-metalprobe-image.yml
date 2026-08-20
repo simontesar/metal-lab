@@ -50,6 +50,11 @@ jobs:
       with:
         go-version-file: metalprobe-image/go.mod
 
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ccache
+
     - name: Build metalprobe image
       run: make metalprobe-image-build
 
