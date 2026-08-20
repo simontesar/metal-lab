@@ -1,0 +1,63 @@
+name: Build and Publish Metalprobe Image
+on:
+  release:
+    types:
+    - published
+  push:
+    branches:
+    - main
+    tags:
+    - v*
+    paths:
+    - 'metalprobe-image/**'
+    - 'Makefile'
+    - '.github/workflows/publish-metalprobe-image.yml'
+  pull_request:
+    paths:
+    - 'metalprobe-image/**'
+    - 'Makefile'
+    - '.github/workflows/publish-metalprobe-image.yml'
+    types: [labeled, unlabeled, opened, synchronize, reopened]
+
+jobs:
+  publish:
+    # Push to main, published release, or PR labeled with 'ok-to-image'
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ok-to-image')) ||
+      (github.event_name == 'release' && github.event.action == 'published')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    env:
+      METALPROBE_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/metalprobe
+      METALPROBE_IMAGE_TAG: ${{ github.sha }}
+
+    steps:
+    - name: Clone the code
+      uses: actions/checkout@v7
+
+    - name: Login to GitHub Container Registry
+      uses: docker/login-action@v4
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Setup Go
+      uses: actions/setup-go@v7
+      with:
+        go-version-file: metalprobe-image/go.mod
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y ccache libelf-dev
+
+    - name: Build metalprobe image
+      run: make metalprobe-image-build
+
+    - name: Push metalprobe image
+      if: github.event_name != 'pull_request'
+      run: make metalprobe-image-push
