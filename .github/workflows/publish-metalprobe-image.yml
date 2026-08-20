@@ -31,7 +31,7 @@ jobs:
       contents: read
       packages: write
     env:
-      METALPROBE_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/metalprobe
+      METALPROBE_IMAGE_NAME: ghcr.io/${{ github.repository }}/metalprobe
       METALPROBE_IMAGE_TAG: ${{ github.sha }}
 
     steps:
