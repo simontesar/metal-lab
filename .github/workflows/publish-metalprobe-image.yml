@@ -31,7 +31,8 @@ jobs:
       contents: read
       packages: write
     env:
-      IMAGE: ghcr.io/${{ github.repository_owner }}/metalprobe
+      METALPROBE_IMAGE_NAME: ghcr.io/${{ github.repository_owner }}/metalprobe
+      METALPROBE_IMAGE_TAG: ${{ github.sha }}
 
     steps:
     - name: Clone the code
@@ -50,8 +51,8 @@ jobs:
         go-version-file: metalprobe-image/go.mod
 
     - name: Build metalprobe image
-      run: make metalprobe-image-build METALPROBE_BOOT_IMAGE="${IMAGE}:${{ github.sha }}"
+      run: make metalprobe-image-build
 
     - name: Push metalprobe image
       if: github.event_name != 'pull_request'
-      run: make metalprobe-image-push METALPROBE_BOOT_IMAGE="${IMAGE}:${{ github.sha }}"
+      run: make metalprobe-image-push

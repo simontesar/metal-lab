@@ -20,9 +20,9 @@ CERT_MANAGER_VERSION ?= v1.17.1
 CERT_MANAGER_MANIFEST ?= https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
 KIND_CLUSTER_NAME ?= k8s
 TFTP_IMG ?= tftp:latest
-METALPROBE_IMAGE_DIR  ?= metalprobe-image
-KBAKE_KERNEL_TAG       ?= v7.1
-METALPROBE_BOOT_IMAGE  ?= ghcr.io/simontesar/metal-lab:dev
+KBAKE_KERNEL_TAG        ?= v7.1
+METALPROBE_IMAGE_NAME   ?= ghcr.io/simontesar/metal-lab
+METALPROBE_IMAGE_TAG    ?= dev
 
 .PHONY: help deploy destroy clean-disks inspect check \
 	cert-manager-install cert-manager-wait \
@@ -200,14 +200,14 @@ bmc-delete: ## Delete BMC + BMCSecret for node1 and node2
 		KUBECONFIG=$(KUBECONFIG) $(KUBECTL) delete -f - --ignore-not-found
 
 metalprobe-image-tools: ## Install u-root, ironcore-image, and kbake
-	cd $(METALPROBE_IMAGE_DIR) && go install github.com/u-root/u-root@v0.16.0
-	cd $(METALPROBE_IMAGE_DIR) && go install github.com/ironcore-dev/ironcore-image/cmd/ironcore-image@v0.5.0
-	cd $(METALPROBE_IMAGE_DIR) && go install github.com/ironcore-dev/kbake@5ec65c0d5d780e4a2c36c736c3684314c16250e6
+	cd metalprobe-image && go install github.com/u-root/u-root@v0.16.0
+	cd metalprobe-image && go install github.com/ironcore-dev/ironcore-image/cmd/ironcore-image@v0.5.0
+	cd metalprobe-image && go install github.com/ironcore-dev/kbake@5ec65c0d5d780e4a2c36c736c3684314c16250e6
 
 metalprobe-image-build: metalprobe-image-tools ## Build the metalprobe u-root boot image (kernel+initramfs)
-	cd $(METALPROBE_IMAGE_DIR) && ./hack/build.sh -k "$(KBAKE_KERNEL_TAG)" -o ./bin/initramfs.cpio
-	cd $(METALPROBE_IMAGE_DIR) && ironcore-image build --tag "$(METALPROBE_BOOT_IMAGE)" \
+	cd metalprobe-image && ./hack/build.sh -k "$(KBAKE_KERNEL_TAG)" -o ./bin/initramfs.cpio
+	cd metalprobe-image && ironcore-image build --tag "$(METALPROBE_IMAGE_NAME):$(METALPROBE_IMAGE_TAG)" \
 		--config "arch=amd64,initramfs=./bin/initramfs.cpio,kernel=./bin/vmlinuz"
 
 metalprobe-image-push: ## Push the built metalprobe boot image (requires ghcr.io auth)
-	cd $(METALPROBE_IMAGE_DIR) && ironcore-image push "$(METALPROBE_BOOT_IMAGE)"
+	cd metalprobe-image && ironcore-image push "$(METALPROBE_IMAGE_NAME):$(METALPROBE_IMAGE_TAG)"
