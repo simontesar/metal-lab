@@ -148,6 +148,7 @@ init: 2026/08/21 05:29:56 Setting console log level to 5...
 
 </details>
 
+## NoVNC
 Once you start a test the machines should boot and their consoles should be accessible at the respective NoVNC URLs:
 * https://localhost:4431/novnc/vnc.html
 * https://localhost:4432/novnc/vnc.html
