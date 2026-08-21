@@ -169,6 +169,7 @@ Tear down the setup and optionally remove the VMs' disks in the lab:
 $ make destroy clean-disks
 …
 ```
+
 ## Architecture
 ### Wiring
 ![Wiring diagram](wiring.drawio.svg)
