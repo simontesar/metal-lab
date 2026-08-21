@@ -15,6 +15,8 @@ configMapGenerator:
   - leases_v4.txt
 
 images:
+# Pin to unreleased version that includes a necessary fix[0].
+# [0]: https://github.com/ironcore-dev/FeDHCP/pull/465
 - name: fedhcp
   newName: ghcr.io/ironcore-dev/fedhcp
   newTag: sha-0f1fd30
