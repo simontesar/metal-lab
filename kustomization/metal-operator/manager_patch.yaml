@@ -14,7 +14,7 @@ spec:
         - --metrics-bind-address=:8443
         - --health-probe-bind-address=:8081
         - --mac-prefixes-file=/etc/macdb/mac_prefixes.yaml
-        - --probe-image=ghcr.io/ironcore-dev/metalprobe:latest
+        - --probe-image=ghcr.io/ironcore-dev/metalprobe:latest # Not actually used with the OS image below
         - --probe-os-image=ghcr.io/simontesar/metal-operator-test-framework:dev
         - --registry-url=http://10.250.200.2:30000
         - --registry-port=30000

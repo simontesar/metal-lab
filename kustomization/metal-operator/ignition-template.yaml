@@ -9,6 +9,7 @@ storage:
 passwd:
   users:
     - name: root
+      # Password "metal"
       password_hash: "$6$U13XNGV9MMTY3xbZ$CoTJBLmGNKn7We/0FpgtURNGudhpKXm/S9E5qXa5hV4RXmnviJJXlKHuZwGSLU5ZxkI0PYMWk.coIjoVL1ADN0"
     - name: metal
       password_hash: {{.PasswordHash}}
