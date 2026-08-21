@@ -1,25 +1,22 @@
 # metal-lab
 
-A standalone [containerlab](https://containerlab.dev/) environment for
-developing and exercising [metal-operator](https://github.com/ironcore-dev/metal-operator)
-and its supporting stack against BMC-managed servers. The containerlab setup
-runs the following services:
-* Two `alpine`-based switches that act as bridges for the IB and OOB network
+A standalone environment for running, testing and developing around the [metal-operator](https://github.com/ironcore-dev/metal-operator) and its supporting stack against BMC-managed servers. It runs the following services:
+* Two `alpine`-based switches that act as bridges for the in-band and out-of-band network
 * A `kind`-based Kubernetes cluster that runs:
-* * The metal-operator
-* * The boot-operator
-* * FeDHCP
-* * A TFTP server for PXE
-* Two [qemu-bmc](https://github.com/simontesar/qemu-bmc)-based server nodes
+  * The metal-operator
+  * The boot-operator
+  * FeDHCP
+  * A TFTP server for PXE
+* Two [qemu-bmc](https://github.com/simontesar/qemu-bmc)-based server nodes.
 
-The environment supports booting via PXE and httpboot.
+The environment supports booting via PXE and httpboot and includes a minimal discovery metalprobe boot image that boots the two virtualized nodes in under ten seconds, allowing a `Server` resource to reach `Available` state in about 30 seconds.
 
 # Architecture
 ## Wiring
-![Wiring diagram](wiring.drawio.png)
+![Wiring diagram](wiring.drawio.svg)
 
 ## Network
-![Network architecture](network.drawio.png)
+![Network architecture](network.drawio.svg)
 
 ## Usage
 ```shell
