@@ -9,7 +9,9 @@ A standalone environment for running, testing and developing around the [metal-o
   * A TFTP server for PXE
 * Two [qemu-bmc](https://github.com/simontesar/qemu-bmc)-based server nodes. `qemu-bmc` implements a virtual BMC in Golang that manages an actual compute resource via QEMU, not a mock. 
 
-The environment supports booting via PXE and httpboot and includes a minimal discovery metalprobe boot image that boots the two virtualised nodes in under ten seconds, allowing a `Server` resource to reach `Available` state in about 30 seconds. It can be used to boot whatever image needed.
+See the [Architecture](#architecture) section for more information.
+
+The environment supports booting via PXE and httpboot(see caveats) and includes a minimal discovery [metalprobe boot image](#metalprobe-boot-image) that boots the two virtualised nodes in under ten seconds, allowing a `Server` resource to reach `Available` state in about 30 seconds. It can be used to boot whatever image needed.
 
 ## Usage
 ### Basic workflow
@@ -151,6 +153,9 @@ Once you start a test the machines should boot and their consoles should be acce
 * https://localhost:4432/novnc/vnc.html
 
 Use the default `admin`/`password` credentials. Note that the "connect" button will not display a screen until the machine is booted.
+
+## Metalprobe boot image
+The metalprobe subdirectory implements building a uroot-based operating system image used as `--probe-os-image` in this setup. Instead of starting a full-fledged system like Gardenlinux and running containerd to execute `metalprobe`, it embeds the `metalprobe` binary in its initramfs and executes it via a small Go-binary used as init/PID1 that implements supporting functions like DHCP and ACPI. The image build in the pipeline uses [kbake](https://github.com/ironcore-dev/kbake) and [uroot](https://github.com/u-root/u-root) but the artifact is available publicly as `ghcr.io/simontesar/metal-lab/metalprobe:master`.
 
 ## Running the metal-operator-test-framework
 This repository provides two value files than can be used with the [metal-operator-test-framework](https://github.com/simontesar/metal-operator-test-framework) to run tests against the two qemu-bmc managed Servers. After you cloned the `metal-operator-test-framework`, you'll be able to run the tests like this in the other repository:
