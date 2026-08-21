@@ -16,10 +16,10 @@ The environment supports booting via PXE and httpboot.
 
 # Architecture
 ## Wiring
-![Wiring diagram](wiring.drawio.png)
+![Wiring diagram](wiring.drawio.svg)
 
 ## Network
-![Network architecture](network.drawio.png)
+![Network architecture](network.drawio.svg)
 
 ## Usage
 ```shell
