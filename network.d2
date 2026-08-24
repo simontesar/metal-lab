@@ -1,0 +1,41 @@
+direction: down
+
+"oob-network": "Out-of-Band Network\n172.16.100.0/24" {
+  shape: rectangle
+  style.fill: "#f8cecc"
+  style.stroke: "#b85450"
+}
+
+"ib-network": "In-Band Network\n10.250.200.0/24" {
+  shape: rectangle
+  style.fill: "#d5e8d4"
+  style.stroke: "#82b366"
+}
+
+"node1-bmc": "node1 BMC" {
+  style.fill: "#f8cecc"
+  style.stroke: "#b85450"
+}
+"node2-bmc": "node2 BMC" {
+  style.fill: "#f8cecc"
+  style.stroke: "#b85450"
+}
+"node1-vm": "node1 VM" {
+  style.fill: "#d5e8d4"
+  style.stroke: "#82b366"
+}
+"node2-vm": "node2 VM" {
+  style.fill: "#d5e8d4"
+  style.stroke: "#82b366"
+}
+"k8s": "K8S" {
+  style.fill: "#dae8fc"
+  style.stroke: "#6c8ebf"
+}
+
+"node1-bmc" -> "oob-network": ".11" { style.stroke: "#b85450" }
+"node2-bmc" -> "oob-network": ".12" { style.stroke: "#b85450" }
+"k8s" -> "oob-network": ".2" { style.stroke: "#b85450" }
+"node1-vm" -> "ib-network": ".11" { style.stroke: "#82b366" }
+"node2-vm" -> "ib-network": ".12" { style.stroke: "#82b366" }
+"k8s" -> "ib-network": ".2" { style.stroke: "#82b366" }

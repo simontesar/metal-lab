@@ -1,0 +1,65 @@
+direction: right
+
+"node1": {
+  shape: rectangle
+  style.fill: "#f8cecc"
+  style.stroke: "#b85450"
+}
+"node1-vm": "VM" {
+  style.fill: "#d5e8d4"
+  style.stroke: "#82b366"
+}
+
+"node2": {
+  shape: rectangle
+  style.fill: "#f8cecc"
+  style.stroke: "#b85450"
+}
+"node2-vm": "VM" {
+  style.fill: "#d5e8d4"
+  style.stroke: "#82b366"
+}
+
+"k8s": "K8S" {
+  shape: rectangle
+  style.fill: "#dae8fc"
+  style.stroke: "#6c8ebf"
+}
+
+"oob-switch": "out-of-band-switch" {
+  shape: rectangle
+  style.fill: "#f8cecc"
+  style.stroke: "#b85450"
+}
+
+"ib-switch": "in-band-switch" {
+  shape: rectangle
+  style.fill: "#d5e8d4"
+  style.stroke: "#82b366"
+}
+
+"node1" -> "node1-vm": "eth2 <-> eth1" {
+  style.stroke: "#82b366"
+}
+"node2" -> "node2-vm": "eth2 <-> eth1" {
+  style.stroke: "#82b366"
+}
+
+"node1" -> "oob-switch": "eth1 <-> eth2" {
+  style.stroke: "#b85450"
+}
+"node2" -> "oob-switch": "eth1 <-> eth3" {
+  style.stroke: "#b85450"
+}
+"k8s" -> "oob-switch": "eth1 <-> eth4" {
+  style.stroke: "#b85450"
+}
+"node1" -> "ib-switch": "eth2 <-> eth2" {
+  style.stroke: "#82b366"
+}
+"node2" -> "ib-switch": "eth2 <-> eth3" {
+  style.stroke: "#82b366"
+}
+"k8s" -> "ib-switch": "eth2 <-> eth4" {
+  style.stroke: "#82b366"
+}
