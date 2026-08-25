@@ -68,7 +68,6 @@ topology:
         - ip link set eth1 master br0
         - ip link set eth2 master br0
         - ip link set eth3 master br0
-        - ip link set eth4 master br0
 
     ib-switch:
       kind: linux
@@ -79,7 +78,6 @@ topology:
         - ip link set eth1 master br0
         - ip link set eth2 master br0
         - ip link set eth3 master br0
-        - ip link set eth4 master br0
 
     k8s:
       kind: k8s-kind
@@ -98,13 +96,13 @@ topology:
 
   links:
     # OOB network (172.16.100.0/24)
-    - endpoints: ["oob-switch:eth2", "node1:eth1"]
-    - endpoints: ["oob-switch:eth3", "node2:eth1"]
-    - endpoints: ["oob-switch:eth4", "k8s-control-plane:eth1"]
+    - endpoints: ["oob-switch:eth1", "node1:eth1"]
+    - endpoints: ["oob-switch:eth2", "node2:eth1"]
+    - endpoints: ["oob-switch:eth3", "k8s-control-plane:eth1"]
     # IB network (10.250.200.0/24)
-    - endpoints: ["ib-switch:eth2", "node1:eth2"]
-    - endpoints: ["ib-switch:eth3", "node2:eth2"]
-    - endpoints: ["ib-switch:eth4", "k8s-control-plane:eth2"]
+    - endpoints: ["ib-switch:eth1", "node1:eth2"]
+    - endpoints: ["ib-switch:eth2", "node2:eth2"]
+    - endpoints: ["ib-switch:eth3", "k8s-control-plane:eth2"]
     # Optional upstream host links
     # - type: host
     #   endpoint:
