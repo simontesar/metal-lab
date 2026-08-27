@@ -8,7 +8,7 @@ topology:
   groups:
     workers:
       kind: linux
-      image: ghcr.io/simontesar/qemu-bmc:v0.7.0
+      image: ghcr.io/simontesar/qemu-bmc:v0.8.0
       devices:
         - /dev/net/tun:/dev/net/tun
         - /dev/kvm:/dev/kvm
@@ -27,6 +27,7 @@ topology:
         IPMI_PASS: password
         ENABLE_KVM: "true"
         GRACEFUL_SHUTDOWN_TIMEOUT: 15s
+        CONSOLE_LOG: /vm/console.log
 
   nodes:
     node1:
