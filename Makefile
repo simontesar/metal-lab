@@ -5,7 +5,6 @@ LAB_NAME ?= metal-operator-test
 DISK_SIZE ?= 20G
 NODES    ?= node1 node2
 VM_DIR   ?= vm
-SERIAL_PORT ?= 9002
 
 KUBECONFIG ?= $(CURDIR)/kubeconfig.yaml
 KUSTOMIZE  ?= kustomize
@@ -59,30 +58,21 @@ deploy: check ## Create disks and deploy lab
 destroy: ## Tear down the lab
 	$(CLAB) destroy -t $(TOPO) --cleanup
 
-clean-disks: ## Remove per-node VM disks and OVMF_VARS files
+clean-disks: ## Remove per-node VM disks, OVMF_VARS and console logs
 	@for node in $(NODES); do \
 		rm -f $(VM_DIR)/$$node/disk.qcow2 \
-			$(VM_DIR)/$$node/OVMF_VARS.fd; \
+			$(VM_DIR)/$$node/OVMF_VARS.fd \
+			$(VM_DIR)/$$node/console.log; \
 	done
 
 inspect: ## Show lab status
 	$(CLAB) inspect -t $(TOPO)
 
-node1-console: ## Attach to node1's QEMU serial console (Ctrl-C to detach)
-	docker exec -it clab-$(LAB_NAME)-node1 bash -c ' \
-		exec 3<>/dev/tcp/localhost/$(SERIAL_PORT); \
-		trap "kill 0" EXIT; \
-		cat <&3 & \
-		cat >&3 \
-	'
+node1-console: ## Follow node1's serial console
+	tail -n +1 -F $(VM_DIR)/node1/console.log
 
-node2-console: ## Attach to node2's QEMU serial console (Ctrl-C to detach)
-	docker exec -it clab-$(LAB_NAME)-node2 bash -c ' \
-		exec 3<>/dev/tcp/localhost/$(SERIAL_PORT); \
-		trap "kill 0" EXIT; \
-		cat <&3 & \
-		cat >&3 \
-	'
+node2-console: ## Follow node2's serial console
+	tail -n +1 -F $(VM_DIR)/node2/console.log
 
 cert-manager-install: ## Install cert-manager from upstream release manifest
 	KUBECONFIG=$(KUBECONFIG) $(KUBECTL) apply -f $(CERT_MANAGER_MANIFEST)
