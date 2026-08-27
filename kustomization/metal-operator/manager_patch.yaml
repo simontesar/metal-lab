@@ -22,6 +22,10 @@ spec:
         - --bmc-reset-waiting-interval=1s
         - --server-resync-interval=5s
         - --enforce-first-boot=true
+        - --enforce-power-off=true
+        - --power-polling-timeout=15s
+        - --maintenance-resync-interval=15s
+        - --bmc-reset-resync-interval=15s
         ports:
         - containerPort: 8081
           name: health
