@@ -99,17 +99,8 @@ func main() {
 
 	ignitionURL, _ := cmdline.Flag("ignition.config.url")
 	if ignitionURL == "" {
-		// Sollte hier weitermachen, auch ohne iginition url leben
 		park(fmt.Errorf("no ignition.config.url on kernel cmdline"))
 	}
-
-	dhcpCtx, cancel := context.WithTimeout(ctx, 2*time.Minute)
-	err := configureDHCP(dhcpCtx)
-	cancel()
-	if err != nil {
-		park(fmt.Errorf("configuring DHCP: %w", err))
-	}
-	slog.Info("configured DHCP")
 
 	rawFlags, err := ignitionshim.FetchFlags(ctx, ignitionURL)
 	if err != nil {
