@@ -11,7 +11,7 @@ topology:
       image: ghcr.io/simontesar/qemu-bmc:v0.10.0
       devices:
         - /dev/net/tun:/dev/net/tun
-        - /dev/kvm:/dev/kvm
+        - ${KVM_DEVICE:=/dev/kvm}:/dev/kvm
       cap-add:
         - NET_ADMIN
         - SYS_ADMIN
@@ -28,7 +28,7 @@ topology:
         VM_BOOT: cn
         IPMI_USER: admin
         IPMI_PASS: password
-        ENABLE_KVM: "true"
+        ENABLE_KVM: "${ENABLE_KVM:=true}"
         GRACEFUL_SHUTDOWN_TIMEOUT: 15s
         CONSOLE_LOG: /vm/console.log
 
