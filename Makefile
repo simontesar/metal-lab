@@ -19,7 +19,7 @@ CERT_MANAGER_MANIFEST ?= https://github.com/cert-manager/cert-manager/releases/d
 KIND_CLUSTER_NAME ?= k8s
 TFTP_IMG ?= tftp:latest
 KBAKE_KERNEL_TAG        ?= v7.1
-METALPROBE_IMAGE_NAME   ?= ghcr.io/simontesar/metal-lab
+METALPROBE_IMAGE_NAME   ?= ghcr.io/simontesar/metal-lab/metalprobe
 METALPROBE_IMAGE_TAG    ?= dev
 
 .PHONY: help deploy destroy clean-disks inspect \
