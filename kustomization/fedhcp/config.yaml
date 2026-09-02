@@ -9,4 +9,4 @@ server4:
     - dns: 1.1.1.1 8.8.8.8
     - range: /var/lib/fedhcp/leases.db 10.250.200.10 10.250.200.50 24h
     - pxeboot: /etc/fedhcp/pxeboot_config.yaml
-    - httpboot: /etc/fedhcp/httpboot_config.yaml
+    # - httpboot: /etc/fedhcp/httpboot_config.yaml
