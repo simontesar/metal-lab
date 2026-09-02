@@ -1,5 +1,4 @@
 CLAB     ?= clab
-QEMU_IMG ?= qemu-img
 TOPO     ?= infra.clab.yaml
 LAB_NAME ?= metal-operator-test
 DISK_SIZE ?= 20G
@@ -23,7 +22,7 @@ KBAKE_KERNEL_TAG        ?= v7.1
 METALPROBE_IMAGE_NAME   ?= ghcr.io/simontesar/metal-lab
 METALPROBE_IMAGE_TAG    ?= dev
 
-.PHONY: help deploy destroy clean-disks inspect check \
+.PHONY: help deploy destroy clean-disks inspect \
 	cert-manager-install cert-manager-wait \
 	metal-operator-deploy metal-operator-delete \
 	metal-operator-deploy-wait \
@@ -39,19 +38,7 @@ help: ## Show available targets
 	@grep -E '^[a-zA-Z0-9_.-]+:.*##' $(MAKEFILE_LIST) | \
 		awk 'BEGIN {FS = ":.*## "}; {printf "  %-24s %s\n", $$1, $$2}'
 
-check: ## Fail if required tools are missing
-	@command -v $(QEMU_IMG) >/dev/null || \
-		{ echo "error: $(QEMU_IMG) not found" >&2; exit 1; }
-	@command -v $(CLAB) >/dev/null || \
-		{ echo "error: $(CLAB) (containerlab) not found" >&2; exit 1; }
-	@command -v kind >/dev/null || \
-		{ echo "error: kind CLI not found (required for k8s-kind)" >&2; exit 1; }
-	@command -v $(KUSTOMIZE) >/dev/null || \
-		{ echo "error: $(KUSTOMIZE) not found" >&2; exit 1; }
-	@command -v $(KUBECTL) >/dev/null || \
-		{ echo "error: $(KUBECTL) not found" >&2; exit 1; }
-
-deploy: check ## Create disks and deploy lab
+deploy: ## Create disks and deploy lab
 	touch $(KUBECONFIG) # Initialises the kubeconfig with users' permissions
 	$(CLAB) deploy -t $(TOPO)
 
