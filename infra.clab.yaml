@@ -8,7 +8,7 @@ topology:
   groups:
     workers:
       kind: linux
-      image: ghcr.io/simontesar/qemu-bmc:v0.9.0
+      image: ghcr.io/simontesar/qemu-bmc:v0.10.0
       devices:
         - /dev/net/tun:/dev/net/tun
         - /dev/kvm:/dev/kvm
@@ -17,6 +17,8 @@ topology:
         - SYS_ADMIN
       env:
         DEBUG: true
+        SYSTEM_MANUFACTURER: "Dell Inc."
+        ENABLE_DELL_BMC_ATTRIBUTES: "true"
         VM_NETWORKS: eth2
         VM_DISK: /vm/disk.qcow2
         VM_DISK_SIZE: 20G
