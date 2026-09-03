@@ -5,7 +5,7 @@ on:
     - published
   push:
     branches:
-    - master
+    - main
     tags:
     - v*
     paths:
@@ -17,14 +17,13 @@ on:
     - 'metalprobe-image/**'
     - 'Makefile'
     - '.github/workflows/publish-metalprobe-image.yml'
-    types: [labeled, unlabeled, opened, synchronize, reopened]
+    types: [opened, synchronize, reopened]
 
 jobs:
   publish:
-    # Push to master, published release, or PR labeled with 'ok-to-image'
     if: |
       github.event_name == 'push' ||
-      (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ok-to-image')) ||
+      github.event_name == 'pull_request' ||
       (github.event_name == 'release' && github.event.action == 'published')
     runs-on: ubuntu-latest
     permissions:
@@ -59,11 +58,18 @@ jobs:
       run: make metalprobe-image-build
 
     - name: Push metalprobe image
-      if: github.event_name != 'pull_request'
       run: make metalprobe-image-push
 
-    - name: Tag and push master image
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    - name: Tag and push main image
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:master"
-        ironcore-image push "${METALPROBE_IMAGE_NAME}:master"
+        ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:main"
+        ironcore-image push "${METALPROBE_IMAGE_NAME}:main"
+
+    - name: Tag and push PR image
+      if: github.event_name == 'pull_request'
+      env:
+        PR_TAG: pr-${{ github.event.pull_request.number }}
+      run: |
+        ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:${PR_TAG}"
+        ironcore-image push "${METALPROBE_IMAGE_NAME}:${PR_TAG}"
