@@ -1,4 +1,4 @@
-from: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux@v7.1
+from: git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux@v7.2
 options:
   enable:
   - EFI
