@@ -15,7 +15,7 @@ spec:
         - --health-probe-bind-address=:8081
         - --mac-prefixes-file=/etc/macdb/mac_prefixes.yaml
         - --probe-image=ghcr.io/ironcore-dev/metalprobe:latest # Not actually used with the OS image below
-        - --probe-os-image=ghcr.io/simontesar/metal-lab/metalprobe:master
+        - --probe-os-image=ghcr.io/simontesar/metal-lab/metalprobe:main
         - --registry-url=http://10.250.200.2:30000
         - --registry-port=30000
         - --skip-cert-validation
