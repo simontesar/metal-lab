@@ -5,7 +5,7 @@ on:
     - published
   push:
     branches:
-    - master
+    - main
     tags:
     - v*
     paths:
@@ -21,7 +21,7 @@ on:
 
 jobs:
   publish:
-    # Push to master, published release, or PR labeled with 'ok-to-image'
+    # Push to main, published release, or PR labeled with 'ok-to-image'
     if: |
       github.event_name == 'push' ||
       (github.event_name == 'pull_request' && contains(github.event.pull_request.labels.*.name, 'ok-to-image')) ||
@@ -62,8 +62,8 @@ jobs:
       if: github.event_name != 'pull_request'
       run: make metalprobe-image-push
 
-    - name: Tag and push master image
-      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    - name: Tag and push main image
+      if: github.event_name == 'push' && github.ref == 'refs/heads/main'
       run: |
-        ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:master"
-        ironcore-image push "${METALPROBE_IMAGE_NAME}:master"
+        ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:main"
+        ironcore-image push "${METALPROBE_IMAGE_NAME}:main"
