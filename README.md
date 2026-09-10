@@ -14,6 +14,10 @@ See the [Architecture](#architecture) section for more information.
 The environment supports booting via PXE(default) and httpboot and includes a minimal discovery [metalprobe boot image](#metalprobe-boot-image) that boots the two virtualised nodes in under ten seconds, allowing a `Server` resource to reach `Available` state in about 30 seconds. It can be used to boot whatever image needed.
 
 ## Usage
+### Requirements
+* [containerlab](https://containerlab.dev/)
+* [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
+
 ### Basic workflow
 ```shell
 # Deploy and run all services
@@ -162,7 +166,7 @@ The metalprobe subdirectory implements building a uroot-based operating system i
 This repository provides two value files than can be used with the [metal-operator-test-framework](https://github.com/simontesar/metal-operator-test-framework) to run tests against the two qemu-bmc managed Servers. After you cloned the `metal-operator-test-framework`, you'll be able to run the tests like this in the other repository:
 ```shell
 $ export KUBECONFIG=/path/to/metal-lab/kubeconfig.yaml
-$ make test-compatibility-b1 COMPATIBILITY_VALUES=/path/to/metal-lab/values-containerlab-node1.yaml CHAINSAW_EXTRA_FLAGS="--pause-on-failure"
+$ make test/02-discovery COMPATIBILITY_VALUES=/path/to/metal-lab/values-containerlab-node1.yaml CHAINSAW_EXTRA_FLAGS="--pause-on-failure"
 ```
 
 Tear down the setup and optionally remove the VMs' disks in the lab:
