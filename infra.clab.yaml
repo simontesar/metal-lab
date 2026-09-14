@@ -8,7 +8,7 @@ topology:
   groups:
     workers:
       kind: linux
-      image: ghcr.io/simontesar/qemu-bmc:v0.10.0
+      image: ${QEMU_BMC_IMAGE:=ghcr.io/simontesar/qemu-bmc:v0.10.0}
       devices:
         - /dev/net/tun:/dev/net/tun
         - ${KVM_DEVICE:=/dev/kvm}:/dev/kvm
