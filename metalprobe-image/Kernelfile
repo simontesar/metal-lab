@@ -23,6 +23,11 @@ options:
   - SERIAL_8250_CONSOLE
   - INPUT
   - INPUT_EVDEV
+  - VT
+  - VT_CONSOLE
+  - SYSFB_SIMPLEFB
+  - DRM_FBDEV_EMULATION
+  - FRAMEBUFFER_CONSOLE
 modules:
   builtin:
   - FAILOVER
@@ -32,3 +37,5 @@ modules:
   - VIRTIO_NET
   - VIRTIO_BLK
   - ACPI_BUTTON
+  - DRM
+  - DRM_SIMPLEDRM
