@@ -7,6 +7,7 @@ model: "Standard PC (Q35 + ICH9, 2009)"
 firmwareVersion: "1.0.0"
 powerState: "On"
 biosVersion: "1.0.0"
+biosSettingNoRebootKey: "AdminPhone"
 biosSettingNoRebootValue: "+1-555-0100"
 biosSettingRebootValue: "Bios"
 bootOrder: ["Hdd", "Pxe", "Cd"]
