@@ -11,8 +11,10 @@ U_ROOT="${U_ROOT:-u-root}"
 KBAKE="${KBAKE:-kbake}"
 U_ROOT_PKG="$(go list -m -f "{{ .Dir }}" github.com/u-root/u-root)"
 
-ADDITIONAL_U_ROOT_OPTS=()
+ARCHS=(amd64 arm64)
+
 KERNEL_TAG=""
+INITRAMFS_OUT=""
 
 while [[ $# -gt 0 ]]; do
   case $1 in
@@ -22,7 +24,7 @@ while [[ $# -gt 0 ]]; do
     shift
     ;;
   -o)
-    ADDITIONAL_U_ROOT_OPTS+=("-o=$2")
+    INITRAMFS_OUT="$2"
     shift
     shift
     ;;
@@ -44,13 +46,23 @@ fi
 
 mkdir -p ./bin
 
-"$KBAKE" build . --arch amd64 -t "metalprobe-kernel:$KERNEL_TAG"
-"$KBAKE" get kernel "metalprobe-kernel:$KERNEL_TAG" -a amd64 -o ./bin/vmlinuz
+ARCH_LIST="$(IFS=,; echo "${ARCHS[*]}")"
+"$KBAKE" build . --arch "$ARCH_LIST" -t "metalprobe-kernel:$KERNEL_TAG"
 
-GOOS=linux CGO_ENABLED=0 "$U_ROOT" \
-  -uinitcmd="metalprobe-launcher" \
-  -defaultsh="" \
-  ${ADDITIONAL_U_ROOT_OPTS[@]+"${ADDITIONAL_U_ROOT_OPTS[@]}"} \
-  "$U_ROOT_PKG"/cmds/core/init \
-  github.com/ironcore-dev/metal-operator/cmd/metalprobe \
-  ./cmd/metalprobe-launcher
+for arch in "${ARCHS[@]}"; do
+  "$KBAKE" get kernel "metalprobe-kernel:$KERNEL_TAG" -a "$arch" -o "./bin/vmlinuz-$arch"
+
+  initramfs_opts=()
+  if [[ -n "$INITRAMFS_OUT" ]]; then
+    base="${INITRAMFS_OUT%.cpio}"
+    initramfs_opts+=("-o=${base}-${arch}.cpio")
+  fi
+
+  GOOS=linux GOARCH="$arch" CGO_ENABLED=0 "$U_ROOT" \
+    -uinitcmd="metalprobe-launcher" \
+    -defaultsh="" \
+    ${initramfs_opts[@]+"${initramfs_opts[@]}"} \
+    "$U_ROOT_PKG"/cmds/core/init \
+    github.com/ironcore-dev/metal-operator/cmd/metalprobe \
+    ./cmd/metalprobe-launcher
+done

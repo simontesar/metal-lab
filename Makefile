@@ -181,10 +181,11 @@ metalprobe-image-tools: ## Install u-root, ironcore-image, and kbake
 	cd metalprobe-image && go install github.com/ironcore-dev/ironcore-image/cmd/ironcore-image@v0.5.0
 	cd metalprobe-image && go install github.com/ironcore-dev/kbake@5ec65c0d5d780e4a2c36c736c3684314c16250e6
 
-metalprobe-image-build: metalprobe-image-tools ## Build the metalprobe u-root boot image (kernel+initramfs)
+metalprobe-image-build: metalprobe-image-tools ## Build the metalprobe u-root boot image
 	cd metalprobe-image && ./hack/build.sh -k "$(KBAKE_KERNEL_TAG)" -o ./bin/initramfs.cpio
 	cd metalprobe-image && ironcore-image build --tag "$(METALPROBE_IMAGE_NAME):$(METALPROBE_IMAGE_TAG)" \
-		--config "arch=amd64,initramfs=./bin/initramfs.cpio,kernel=./bin/vmlinuz"
+		--config "arch=amd64,initramfs=./bin/initramfs-amd64.cpio,kernel=./bin/vmlinuz-amd64" \
+		--config "arch=arm64,initramfs=./bin/initramfs-arm64.cpio,kernel=./bin/vmlinuz-arm64"
 
 metalprobe-image-push: ## Push the built metalprobe boot image (requires ghcr.io auth)
 	cd metalprobe-image && ironcore-image push "$(METALPROBE_IMAGE_NAME):$(METALPROBE_IMAGE_TAG)"
