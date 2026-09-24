@@ -52,7 +52,7 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ccache libelf-dev
+        sudo apt-get install -y ccache libelf-dev gcc-aarch64-linux-gnu
 
     - name: Build metalprobe image
       run: make metalprobe-image-build
