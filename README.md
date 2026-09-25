@@ -21,7 +21,7 @@ The environment supports booting via PXE(default) and httpboot and includes a mi
 ### Basic workflow
 ```shell
 # Deploy and run all services
-$ make deploy metal-operator-deploy-wait boot-operator-deploy-wait fedhcp-deploy-wait tftp-deploy-wait
+$ make deploy-all
 …
 
 # Create BMC resources for the the nodes
