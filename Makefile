@@ -22,7 +22,7 @@ KBAKE_KERNEL_TAG        ?= v7.1
 METALPROBE_IMAGE_NAME   ?= ghcr.io/simontesar/metal-lab/metalprobe
 METALPROBE_IMAGE_TAG    ?= dev
 
-.PHONY: help deploy destroy clean-disks inspect \
+.PHONY: help deploy deploy-all destroy clean-disks inspect \
 	cert-manager-install cert-manager-wait \
 	metal-operator-deploy metal-operator-delete \
 	metal-operator-deploy-wait \
@@ -41,6 +41,13 @@ help: ## Show available targets
 deploy: ## Create disks and deploy lab
 	touch $(KUBECONFIG) # Initialises the kubeconfig with users' permissions
 	$(CLAB) deploy -t $(TOPO)
+
+deploy-all: ## Deploy the lab and the full k8s stack
+deploy-all: deploy \
+	metal-operator-deploy-wait \
+	boot-operator-deploy-wait \
+	tftp-deploy-wait \
+	fedhcp-deploy-wait
 
 destroy: ## Tear down the lab
 	$(CLAB) destroy -t $(TOPO) --cleanup

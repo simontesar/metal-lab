@@ -10,6 +10,5 @@ biosVersion: "1.0.0"
 biosSettingNoRebootKey: "AdminPhone"
 biosSettingNoRebootValue: "+1-555-0100"
 biosSettingRebootValue: "Bios"
-bootOrder: ["Hdd", "Pxe", "Cd"]
 bmcSettingKey: "EmailAlert.1.Address"
 bmcSettingValue: "alerts@example.com"
