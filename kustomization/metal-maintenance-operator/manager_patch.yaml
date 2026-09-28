@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: controller-manager
+  namespace: system
+spec:
+  template:
+    spec:
+      containers:
+      - name: manager
+        imagePullPolicy: IfNotPresent
+        args:
+        - --leader-elect
+        - --metrics-bind-address=:8443
+        - --health-probe-bind-address=:8081
+        - --manager-namespace=metal-maintenance-operator-system
+        - --skip-cert-validation
+        - --resync-interval=15s
+        # Sanitization is not used but the flags are mandatory
+        - --sanitization-namespace=metal-maintenance-operator-system
+        - --sanitization-image=unused
+        - --report-base-url=http://metal-maintenance-operator-sanitized-server.metal-maintenance-operator-system.svc:8082
