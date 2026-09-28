@@ -4,6 +4,7 @@ A standalone environment for running, testing and developing around the [metal-o
 * Two `alpine`-based switches that act as bridges for the in-band and out-of-band network
 * A `kind`-based Kubernetes cluster that runs:
   * The metal-operator
+  * The [metal-maintenance-operator](https://github.com/ironcore-dev/metal-maintenance-operator)
   * The boot-operator
   * FeDHCP
   * A TFTP server for PXE
@@ -166,7 +167,7 @@ The metalprobe subdirectory implements building a uroot-based operating system i
 This repository provides two value files than can be used with the [metal-operator-test-framework](https://github.com/simontesar/metal-operator-test-framework) to run tests against the two qemu-bmc managed Servers. After you cloned the `metal-operator-test-framework`, you'll be able to run the tests like this in the other repository:
 ```shell
 $ export KUBECONFIG=/path/to/metal-lab/kubeconfig.yaml
-$ make test/02-discovery COMPATIBILITY_VALUES=/path/to/metal-lab/values-containerlab-node1.yaml CHAINSAW_EXTRA_FLAGS="--pause-on-failure"
+$ make test/02-discovery VALUES=/path/to/metal-lab/values-containerlab-node1.yaml CHAINSAW_EXTRA_FLAGS="--pause-on-failure"
 ```
 
 Tear down the setup and optionally remove the VMs' disks in the lab:
