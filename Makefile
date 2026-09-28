@@ -11,6 +11,7 @@ KUBECTL    ?= kubectl
 BMC_STACK ?= kustomization/bmc
 
 METAL_OPERATOR_STACK ?= kustomization/metal-operator
+MAINTENANCE_OPERATOR_STACK ?= kustomization/metal-maintenance-operator
 BOOT_OPERATOR_STACK ?= kustomization/boot-operator
 FEDHCP_STACK ?= kustomization/fedhcp
 TFTP_STACK ?= kustomization/tftp
@@ -26,6 +27,8 @@ METALPROBE_IMAGE_TAG    ?= dev
 	cert-manager-install cert-manager-wait \
 	metal-operator-deploy metal-operator-delete \
 	metal-operator-deploy-wait \
+	maintenance-operator-deploy maintenance-operator-delete \
+	maintenance-operator-deploy-wait \
 	boot-operator-deploy boot-operator-delete \
 	boot-operator-deploy-wait \
 	fedhcp-deploy fedhcp-delete fedhcp-deploy-wait \
@@ -45,6 +48,7 @@ deploy: ## Create disks and deploy lab
 deploy-all: ## Deploy the lab and the full k8s stack
 deploy-all: deploy \
 	metal-operator-deploy-wait \
+	maintenance-operator-deploy-wait \
 	boot-operator-deploy-wait \
 	tftp-deploy-wait \
 	fedhcp-deploy-wait
@@ -103,6 +107,28 @@ metal-operator-deploy-wait: cert-manager-install cert-manager-wait \
 	KUBECONFIG=$(KUBECONFIG) $(KUBECTL) wait --for=condition=Available \
 		deployment/metal-operator-controller-manager \
 		-n metal-operator-system --timeout=600s
+
+maintenance-operator-deploy: ## Deploy metal-maintenance-operator via kustomize overlay
+	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(MAINTENANCE_OPERATOR_STACK) | \
+		KUBECONFIG=$(KUBECONFIG) $(KUBECTL) apply -f -
+
+maintenance-operator-delete: ## Delete metal-maintenance-operator kustomize overlay
+	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(MAINTENANCE_OPERATOR_STACK) | \
+		KUBECONFIG=$(KUBECONFIG) $(KUBECTL) delete -f - --ignore-not-found
+
+maintenance-operator-deploy-wait: ## Deploy metal-maintenance-operator (after metal-operator), then wait
+maintenance-operator-deploy-wait: metal-operator-deploy-wait \
+	maintenance-operator-deploy
+	@until KUBECONFIG=$(KUBECONFIG) $(KUBECTL) get ns metal-maintenance-operator-system >/dev/null 2>&1; do \
+		echo "Waiting for metal-maintenance-operator-system namespace..."; sleep 5; \
+	done
+	@until KUBECONFIG=$(KUBECONFIG) $(KUBECTL) -n metal-maintenance-operator-system \
+		get deploy metal-maintenance-operator-controller-manager >/dev/null 2>&1; do \
+		echo "Waiting for metal-maintenance-operator deployment..."; sleep 5; \
+	done
+	KUBECONFIG=$(KUBECONFIG) $(KUBECTL) wait --for=condition=Available \
+		deployment/metal-maintenance-operator-controller-manager \
+		-n metal-maintenance-operator-system --timeout=600s
 
 boot-operator-deploy: ## Deploy boot-operator via kustomize overlay
 	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(BOOT_OPERATOR_STACK) | \
