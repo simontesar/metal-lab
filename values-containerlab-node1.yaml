@@ -3,15 +3,19 @@ bmcPort: 443
 bmcScheme: https
 username: admin
 password: password
-model: "Standard PC (Q35 + ICH9, 2009)"
 firmwareVersion: "1.0.0"
-powerState: "On"
 biosVersion: "1.0.0"
-biosSettingNoRebootKey: "AdminPhone"
-biosSettingNoRebootValue: "+1-555-0100"
-biosSettingNoRebootBaselineValue: "+1-555-0199"
-biosSettingRebootKey: "BootMode"
-biosSettingRebootValue: "Bios"
-biosSettingRebootBaselineValue: "Uefi"
-bmcSettingKey: "EmailAlert.1.Address"
-bmcSettingValue: "alerts@example.com"
+01-bmc-registration:
+  model: "Standard PC (Q35 + ICH9, 2009)"
+  powerState: "On"
+06-biossettings-noreboot:
+  key: "AdminPhone"
+  value: "+1-555-0100"
+  baselineValue: "+1-555-0199"
+07-biossettings-reboot:
+  key: "BootMode"
+  value: "Bios"
+  baselineValue: "Uefi"
+08-bmcsettings:
+  key: "EmailAlert.1.Address"
+  value: "alerts@example.com"
