@@ -19,3 +19,4 @@ biosVersion: "1.0.0"
 08-bmcsettings:
   key: "EmailAlert.1.Address"
   value: "alerts@example.com"
+  baselineValue: "compat-base@example.com"
