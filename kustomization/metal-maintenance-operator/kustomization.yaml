@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- https://github.com/ironcore-dev/metal-maintenance-operator//config/default?ref=1b394ae2335c4560989a0433a7547d3556338789
+- https://github.com/ironcore-dev/metal-maintenance-operator//config/default?ref=f06fc4d9511092f15163a5f8014763d60c615eca
 
 patches:
 - path: manager_patch.yaml
