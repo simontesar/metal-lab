@@ -20,3 +20,6 @@ spec:
         - --sanitization-namespace=metal-maintenance-operator-system
         - --sanitization-image=unused
         - --report-base-url=http://metal-maintenance-operator-sanitized-server.metal-maintenance-operator-system.svc:8082
+        - --enable-telemetry
+        - --telemetry-receiver-url=http://172.16.100.2:30092
+        - --telemetry-bmc-insecure-tls
