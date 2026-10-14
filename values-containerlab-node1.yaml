@@ -20,3 +20,7 @@ biosVersion: "1.0.0"
   key: "EmailAlert.1.Address"
   value: "alerts@example.com"
   baselineValue: "compat-base@example.com"
+13-event-subscriptions:
+  testMessageId: "TestEventId"
+  testSeverity: "OK"
+  testOriginOfCondition: "/redfish/v1/Managers/1"
