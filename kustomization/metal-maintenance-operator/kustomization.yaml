@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- https://github.com/ironcore-dev/metal-maintenance-operator//config/default?ref=f06fc4d9511092f15163a5f8014763d60c615eca
+- https://github.com/ironcore-dev/metal-maintenance-operator//config/default?ref=0bd257d819e8cb39e59510fd39386cf2d72669bc
 
 patches:
 - path: manager_patch.yaml
@@ -10,4 +10,4 @@ patches:
 images:
 - name: controller
   newName: ghcr.io/ironcore-dev/metal-maintenance-operator-controller-manager
-  newTag: sha-1b394ae
+  newTag: latest@sha256:fbd35bc40357f3c3a917cb5250cad8f6698f2f523b196bcdb70278842348169d
