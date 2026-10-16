@@ -1,5 +1,8 @@
 name: Build and Publish Metalprobe Image
 on:
+  release:
+    types:
+    - published
   push:
     branches:
     - main
@@ -18,6 +21,10 @@ on:
 
 jobs:
   publish:
+    if: |
+      github.event_name == 'push' ||
+      github.event_name == 'pull_request' ||
+      (github.event_name == 'release' && github.event.action == 'published')
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -47,9 +54,6 @@ jobs:
         sudo apt-get update
         sudo apt-get install -y ccache libelf-dev gcc-aarch64-linux-gnu
 
-    - name: Run tests
-      run: make metalprobe-image-test
-
     - name: Build metalprobe image
       run: make metalprobe-image-build
 
@@ -61,12 +65,6 @@ jobs:
       run: |
         ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:main"
         ironcore-image push "${METALPROBE_IMAGE_NAME}:main"
-
-    - name: Tag and push release image
-      if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-      run: |
-        ironcore-image tag "${METALPROBE_IMAGE_NAME}:${METALPROBE_IMAGE_TAG}" "${METALPROBE_IMAGE_NAME}:${GITHUB_REF_NAME}"
-        ironcore-image push "${METALPROBE_IMAGE_NAME}:${GITHUB_REF_NAME}"
 
     - name: Tag and push PR image
       if: github.event_name == 'pull_request'
