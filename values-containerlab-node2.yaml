@@ -20,6 +20,9 @@ biosVersion: "1.0.0"
   key: "EmailAlert.1.Address"
   value: "alerts@example.com"
   baselineValue: "compat-base@example.com"
+12-force-power-off:
+  osBootWait: 30s
+  powerPollingTimeout: 15
 13-event-subscriptions:
   testMessageId: "TestEventId"
   testSeverity: "OK"
