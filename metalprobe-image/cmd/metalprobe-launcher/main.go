@@ -1,9 +1,9 @@
 //go:build linux
 
 // Command metalprobe-launcher runs as PID 1 in the metalprobe u-root initramfs.
-// It watches for ACPI power-button events, configures networking via DHCP,
-// fetches the metalprobe flags via Ignition and then runs metalprobe as a child
-// process. (Metalprobe is currently not importable from out of the
+// It configures networking via DHCP, fetches the metalprobe flags via Ignition,
+// watches for ACPI power-button events unless Ignition asks it not to, and then
+// runs metalprobe as a child process. (Metalprobe is currently not importable from out of the
 // metal-operator project.) The launcher stays PID 1 and always blocks forever,
 // regardless of how metalprobe exited.
 package main
@@ -95,19 +95,33 @@ func configureDHCP(ctx context.Context) error {
 func main() {
 	ctx := context.Background()
 
-	go watchACPIPowerButton()
-
 	ignitionURL, _ := cmdline.Flag("ignition.config.url")
 	if ignitionURL == "" {
+		go watchACPIPowerButton()
 		park(fmt.Errorf("no ignition.config.url on kernel cmdline"))
 	}
 
-	rawFlags, err := ignitionshim.FetchFlags(ctx, ignitionURL)
+	cfg, err := ignitionshim.FetchConfig(ctx, ignitionURL)
 	if err != nil {
+		go watchACPIPowerButton()
 		park(fmt.Errorf("fetching metalprobe config: %w", err))
 	}
 
-	args := strings.Fields(rawFlags)
+	if cfg.IgnorePowerButton {
+		slog.Info("acpi: ignoring power button as requested by ignition", "path", ignitionshim.IgnorePowerButtonPath)
+	} else {
+		go watchACPIPowerButton()
+	}
+
+	// Images booted for a ServerClaim usually carry no metalprobe config and
+	// only need to stay up, so this is not an error.
+	if cfg.Flags == "" {
+		slog.Info("not running metalprobe, no config in ignition", "path", ignitionshim.ConfigPath)
+		park(nil)
+		select {}
+	}
+
+	args := strings.Fields(cfg.Flags)
 	slog.Info("starting metalprobe", "args", args)
 
 	cmd := exec.Command("metalprobe", args...)
@@ -116,6 +130,7 @@ func main() {
 	if err := cmd.Run(); err != nil {
 		park(fmt.Errorf("metalprobe exited: %w", err))
 	}
+	slog.Info("metalprobe ran successfully")
 
 	park(nil)
 }
@@ -125,7 +140,7 @@ func park(err error) {
 	if err != nil {
 		slog.Error("metalprobe-launcher parking after error", "error", err)
 	} else {
-		slog.Info("metalprobe-launcher parking after clean metalprobe exit")
+		slog.Info("metalprobe-launcher parking")
 	}
 	select {}
 }
