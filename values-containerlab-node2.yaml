@@ -27,3 +27,13 @@ biosVersion: "1.0.0"
   testMessageId: "TestEventId"
   testSeverity: "OK"
   testOriginOfCondition: "/redfish/v1/Managers/1"
+14-biosversion-upgrade:
+  transferProtocol: HTTP
+  baselineImageURI: "http://172.16.100.2:30084/bios-1.0.0.json" # installs biosVersion
+  version: "1.1.0"
+  imageURI: "http://172.16.100.2:30084/bios-1.1.0.json"
+15-bmcversion-upgrade:
+  transferProtocol: HTTP
+  baselineImageURI: "http://172.16.100.2:30084/bmc-1.0.0.json" # installs firmwareVersion
+  version: "1.1.0"
+  imageURI: "http://172.16.100.2:30084/bmc-1.1.0.json"
