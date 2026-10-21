@@ -16,7 +16,7 @@ The environment supports booting via PXE(default) and httpboot and includes a mi
 
 ## Usage
 ### Requirements
-* [containerlab](https://containerlab.dev/)
+* [containerlab](https://containerlab.dev/) v0.81.1
 * [kustomize](https://kubectl.docs.kubernetes.io/installation/kustomize/)
 
 ### Basic workflow

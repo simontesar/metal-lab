@@ -87,10 +87,7 @@ topology:
 
     k8s:
       kind: k8s-kind
-      extras:
-        k8s_kind:
-          deploy:
-            kubeconfig: ../../kubeconfig.yaml
+      kubeconfig: ../../kubeconfig.yaml
 
     k8s-control-plane:
       kind: ext-container
