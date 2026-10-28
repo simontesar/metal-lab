@@ -1,18 +1,18 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: firmware-repo
+  name: nginx
   labels:
-    app: firmware-repo
+    app: nginx
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: firmware-repo
+      app: nginx
   template:
     metadata:
       labels:
-        app: firmware-repo
+        app: nginx
     spec:
       tolerations:
       - key: node-role.kubernetes.io/control-plane
@@ -25,6 +25,8 @@ spec:
         ports:
         - name: http
           containerPort: 80
+        - name: https
+          containerPort: 8443
         readinessProbe:
           httpGet:
             path: /bios-1.0.0.json
@@ -33,7 +35,19 @@ spec:
         - name: packages
           mountPath: /usr/share/nginx/html
           readOnly: true
+        - name: conf
+          mountPath: /etc/nginx/conf.d
+          readOnly: true
+        - name: tls
+          mountPath: /etc/nginx/tls
+          readOnly: true
       volumes:
       - name: packages
         configMap:
           name: firmware-packages
+      - name: conf
+        configMap:
+          name: nginx-conf
+      - name: tls
+        secret:
+          secretName: nginx-tls

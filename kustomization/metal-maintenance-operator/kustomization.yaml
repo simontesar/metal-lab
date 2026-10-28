@@ -6,7 +6,6 @@ resources:
 
 patches:
 - path: manager_patch.yaml
-- path: telemetry_events_service_patch.yaml
 
 images:
 - name: controller
