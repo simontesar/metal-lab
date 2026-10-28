@@ -23,3 +23,4 @@ spec:
         - --enable-telemetry
         - --telemetry-receiver-url=https://172.16.100.2:30093
         - --telemetry-bmc-insecure-tls
+        - --telemetry-enable-critical-event-handler
