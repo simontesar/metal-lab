@@ -8,6 +8,7 @@ A standalone environment for running, testing and developing around the [metal-o
   * The boot-operator
   * FeDHCP
   * A TFTP server for PXE
+  * A HTTP server serves dummy firmware packages to the virtual BMCs and TLS-terminates in front of the metal-maintenance-operator's event endpoint
 * Two [qemu-bmc](https://github.com/simontesar/qemu-bmc)-based server nodes. `qemu-bmc` implements a virtual BMC in Golang that manages an actual compute resource via QEMU, not a mock. 
 
 See the [Architecture](#architecture) section for more information.

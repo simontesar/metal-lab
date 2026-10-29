@@ -2,13 +2,12 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- https://github.com/ironcore-dev/metal-maintenance-operator//config/default?ref=0bd257d819e8cb39e59510fd39386cf2d72669bc
+- https://github.com/ironcore-dev/metal-maintenance-operator//config/default?ref=2d134379a96a7231afc5bf536e6d035a2a8f0478
 
 patches:
 - path: manager_patch.yaml
-- path: telemetry_events_service_patch.yaml
 
 images:
 - name: controller
   newName: ghcr.io/ironcore-dev/metal-maintenance-operator-controller-manager
-  newTag: latest@sha256:fbd35bc40357f3c3a917cb5250cad8f6698f2f523b196bcdb70278842348169d
+  newTag: latest@sha256:ecb12bcce56a2f9fa758e04f4e45f172240a266458d407829fdf98172754995e

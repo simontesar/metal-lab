@@ -15,7 +15,7 @@ MAINTENANCE_OPERATOR_STACK ?= kustomization/metal-maintenance-operator
 BOOT_OPERATOR_STACK ?= kustomization/boot-operator
 FEDHCP_STACK ?= kustomization/fedhcp
 TFTP_STACK ?= kustomization/tftp
-FIRMWARE_REPO_STACK ?= kustomization/firmware-repo
+NGINX_STACK ?= kustomization/nginx
 CERT_MANAGER_VERSION ?= v1.17.1
 CERT_MANAGER_MANIFEST ?= https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
 KIND_CLUSTER_NAME ?= k8s
@@ -34,7 +34,7 @@ METALPROBE_IMAGE_TAG    ?= dev
 	boot-operator-deploy-wait \
 	fedhcp-deploy fedhcp-delete fedhcp-deploy-wait \
 	tftp-images tftp-deploy tftp-delete tftp-deploy-wait \
-	firmware-repo-deploy firmware-repo-delete firmware-repo-deploy-wait \
+	nginx-deploy nginx-delete nginx-deploy-wait \
 	bmc-apply bmc-delete \
 	metalprobe-image-tools metalprobe-image-build metalprobe-image-push \
 	node1-console node2-console
@@ -54,7 +54,7 @@ deploy-all: deploy \
 	boot-operator-deploy-wait \
 	tftp-deploy-wait \
 	fedhcp-deploy-wait \
-	firmware-repo-deploy-wait
+	nginx-deploy-wait
 
 destroy: ## Tear down the lab
 	$(CLAB) destroy -t $(TOPO) --cleanup
@@ -204,19 +204,23 @@ tftp-deploy-wait: boot-operator-deploy-wait \
 		deployment/tftp \
 		-n tftp-system --timeout=300s
 
-firmware-repo-deploy: ## Deploy the firmware package file server
-	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(FIRMWARE_REPO_STACK) | \
+nginx-deploy: ## Deploy nginx: firmware package server and TLS proxy for the telemetry receiver
+	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(NGINX_STACK) | \
 		KUBECONFIG=$(KUBECONFIG) $(KUBECTL) apply -f -
 
-firmware-repo-delete: ## Delete the firmware package file server
-	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(FIRMWARE_REPO_STACK) | \
+nginx-delete: ## Delete nginx: firmware package server and TLS proxy for the telemetry receiver
+	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(NGINX_STACK) | \
 		KUBECONFIG=$(KUBECONFIG) $(KUBECTL) delete -f - --ignore-not-found
 
-firmware-repo-deploy-wait: ## Deploy the firmware package file server, then wait
-firmware-repo-deploy-wait: firmware-repo-deploy
+nginx-deploy-wait: ## Deploy nginx (after cert-manager), then wait
+nginx-deploy-wait: cert-manager-wait \
+	nginx-deploy
+	KUBECONFIG=$(KUBECONFIG) $(KUBECTL) wait --for=condition=Ready \
+		certificate/nginx-tls \
+		-n nginx-system --timeout=300s
 	KUBECONFIG=$(KUBECONFIG) $(KUBECTL) wait --for=condition=Available \
-		deployment/firmware-repo \
-		-n firmware-repo-system --timeout=300s
+		deployment/nginx \
+		-n nginx-system --timeout=300s
 
 bmc-apply: ## Apply BMC + BMCSecret for node1 and node2
 	KUBECONFIG=$(KUBECONFIG) $(KUSTOMIZE) build $(BMC_STACK) | \
