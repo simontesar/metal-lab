@@ -55,10 +55,14 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt-get update
-        sudo apt-get install -y ccache libelf-dev gcc-aarch64-linux-gnu
+        sudo apt-get install -y ccache libelf-dev gcc-aarch64-linux-gnu \
+          qemu-system-x86 ovmf qemu-system-arm qemu-efi-aarch64
 
     - name: Build metalprobe image
       run: make metalprobe-image-build
+
+    - name: Boot-test metalprobe image
+      run: make metalprobe-image-test
 
     - name: Push metalprobe image
       run: make metalprobe-image-push
