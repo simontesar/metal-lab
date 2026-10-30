@@ -36,7 +36,8 @@ METALPROBE_IMAGE_TAG    ?= dev
 	tftp-images tftp-deploy tftp-delete tftp-deploy-wait \
 	nginx-deploy nginx-delete nginx-deploy-wait \
 	bmc-apply bmc-delete \
-	metalprobe-image-tools metalprobe-image-build metalprobe-image-push \
+	metalprobe-image-tools metalprobe-image-build metalprobe-image-test \
+	metalprobe-image-push \
 	node1-console node2-console
 
 help: ## Show available targets
@@ -240,6 +241,11 @@ metalprobe-image-build: metalprobe-image-tools ## Build the metalprobe u-root bo
 	cd metalprobe-image && ironcore-image build --tag "$(METALPROBE_IMAGE_NAME):$(METALPROBE_IMAGE_TAG)" \
 		--config "arch=amd64,initramfs=./bin/initramfs-amd64.cpio,kernel=./bin/vmlinuz-amd64" \
 		--config "arch=arm64,initramfs=./bin/initramfs-arm64.cpio,kernel=./bin/vmlinuz-arm64"
+
+metalprobe-image-test: ## Boot the built metalprobe-image
+	cd metalprobe-image && for arch in amd64 arm64; do \
+		./hack/boot-test.sh -a $$arch -k ./bin/vmlinuz-$$arch -i ./bin/initramfs-$$arch.cpio || exit 1; \
+	done
 
 metalprobe-image-push: ## Push the built metalprobe boot image (requires ghcr.io auth)
 	cd metalprobe-image && ironcore-image push "$(METALPROBE_IMAGE_NAME):$(METALPROBE_IMAGE_TAG)"
