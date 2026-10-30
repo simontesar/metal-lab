@@ -39,3 +39,10 @@ modules:
   - ACPI_BUTTON
   - DRM
   - DRM_SIMPLEDRM
+actions:
+# The x86 EFI stub and decompressor build without -march and inherit the
+# compiler's default, which is x86-64-v3 on Ubuntu's amd64v3 toolchains and
+# faults (#UD) on baseline CPUs such as qemu64.
+- if: ${{ arch == 'amd64' }}
+  actions:
+  - addCompilerFlags: { flags: [-march=x86-64] }
