@@ -1,0 +1,35 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["custom.regex"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "metal-maintenance-operator kustomize base ref tracking main",
+      "managerFilePatterns": ["/^kustomization/metal-maintenance-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["github\\.com/ironcore-dev/metal-maintenance-operator//config/default\\?ref=(?<currentDigest>[0-9a-f]{40})"],
+      "depNameTemplate": "metal-maintenance-operator",
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-maintenance-operator",
+      "datasourceTemplate": "git-refs",
+      "currentValueTemplate": "main"
+    },
+    {
+      "customType": "regex",
+      "description": "metal-maintenance-operator image sha-tag tracking main",
+      "managerFilePatterns": ["/^kustomization/metal-maintenance-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["newTag: sha-(?<currentDigest>[0-9a-f]{7})"],
+      "depNameTemplate": "metal-maintenance-operator-image",
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-maintenance-operator",
+      "datasourceTemplate": "git-refs",
+      "currentValueTemplate": "main",
+      "autoReplaceStringTemplate": "newTag: sha-{{{newDigestShort}}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["https://github.com/ironcore-dev/metal-maintenance-operator"],
+      "groupName": "metal-maintenance-operator",
+      "automerge": false
+    }
+  ]
+}
