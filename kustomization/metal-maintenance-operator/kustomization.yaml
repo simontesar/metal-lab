@@ -10,4 +10,4 @@ patches:
 images:
 - name: controller
   newName: ghcr.io/ironcore-dev/metal-maintenance-operator-controller-manager
-  newTag: sha-2d13437
+  newTag: sha-2d13437 # 2d134379a96a7231afc5bf536e6d035a2a8f0478

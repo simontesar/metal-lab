@@ -17,12 +17,12 @@
       "customType": "regex",
       "description": "metal-maintenance-operator image sha-tag tracking main",
       "managerFilePatterns": ["/^kustomization/metal-maintenance-operator/kustomization\\.yaml$/"],
-      "matchStrings": ["newTag: sha-(?<currentDigest>[0-9a-f]{7})"],
+      "matchStrings": ["newTag: sha-[0-9a-f]{7} # (?<currentDigest>[0-9a-f]{40})"],
       "depNameTemplate": "metal-maintenance-operator-image",
       "packageNameTemplate": "https://github.com/ironcore-dev/metal-maintenance-operator",
       "datasourceTemplate": "git-refs",
       "currentValueTemplate": "main",
-      "autoReplaceStringTemplate": "newTag: sha-{{{newDigestShort}}}"
+      "autoReplaceStringTemplate": "newTag: sha-{{{newDigestShort}}} # {{{newDigest}}}"
     }
   ],
   "packageRules": [
