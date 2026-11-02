@@ -1,0 +1,70 @@
+name: Deploy lab
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      ENABLE_KVM: "false"
+      KVM_DEVICE: /dev/null
+      KUBECONFIG: ${{ github.workspace }}/kubeconfig.yaml
+    steps:
+    - name: Clone the code
+      uses: actions/checkout@v7
+
+    - name: Install kubectl
+      uses: azure/setup-kubectl@v4
+    - name: Install kustomize
+      run: |
+        curl -sSL "https://raw.githubusercontent.com/kubernetes-sigs/kustomize/master/hack/install_kustomize.sh" | bash
+        sudo mv kustomize /usr/local/bin/
+    - name: Install the latest version of kind
+      run: |
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/latest/kind-linux-amd64
+        chmod +x ./kind
+        sudo mv ./kind /usr/local/bin/kind
+    - name: Install containerlab
+      run: bash -c "$(curl -sL https://get.containerlab.dev)" -- -v 0.81.1
+
+    # The *-deploy-wait targets wait for every deployment to become Available,
+    # so e.g. a missing operator image fails this step
+    - name: Deploy lab
+      run: |
+        touch kubeconfig.yaml
+        sudo -E make deploy-all
+        sudo chown -R "$USER:$USER" .
+
+    - name: Collect diagnostics
+      if: always()
+      run: |
+        mkdir -p artifacts
+        kubectl get all -A > artifacts/k8s-all.txt 2>&1 || true
+        kubectl describe pods -A > artifacts/pods-describe.txt 2>&1 || true
+        kubectl -n metal-operator-system logs deploy/metal-operator-controller-manager --tail=-1 > artifacts/metal-operator.log 2>&1 || true
+        kubectl -n metal-maintenance-operator-system logs deploy/metal-maintenance-operator-controller-manager --tail=-1 > artifacts/metal-maintenance-operator.log 2>&1 || true
+        kubectl -n boot-operator-system logs deploy/boot-operator-controller-manager --tail=-1 > artifacts/boot-operator.log 2>&1 || true
+        sudo -E clab inspect -t infra.clab.yaml > artifacts/clab-inspect.txt 2>&1 || true
+
+    - name: Upload artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: deploy-artifacts
+        path: artifacts/
+        if-no-files-found: warn
+
+    - name: Tear down
+      if: always()
+      run: sudo -E make destroy clean-disks || true
