@@ -52,6 +52,25 @@
       "matchStrings": ["newName: (?<depName>ghcr\\.io/ironcore-dev/fedhcp)\\s+newTag: (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
       "datasourceTemplate": "docker",
       "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "metal-operator kustomize base ref tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/metal-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["github\\.com/ironcore-dev/metal-operator//config/default\\?ref=(?<currentDigest>[0-9a-f]{40}) # (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "metal-operator",
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-operator",
+      "datasourceTemplate": "git-tags",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "metal-operator images tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/metal-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["newName: ghcr\\.io/ironcore-dev/(?<depName>metal-operator-controller-manager|metaldata)\\s+newTag: (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-operator",
+      "datasourceTemplate": "git-tags",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ],
   "packageRules": [
@@ -68,6 +87,11 @@
     {
       "matchPackageNames": ["ghcr.io/ironcore-dev/fedhcp"],
       "groupName": "fedhcp",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["https://github.com/ironcore-dev/metal-operator"],
+      "groupName": "metal-operator",
       "automerge": false
     }
   ]
