@@ -44,6 +44,14 @@
       "datasourceTemplate": "git-refs",
       "currentValueTemplate": "main",
       "autoReplaceStringTemplate": "newTag: sha-{{{newDigestShort}}} # {{{newDigest}}}"
+    },
+    {
+      "customType": "regex",
+      "description": "FeDHCP image tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/fedhcp/kustomization\\.yaml$/"],
+      "matchStrings": ["newName: (?<depName>ghcr\\.io/ironcore-dev/fedhcp)\\s+newTag: (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
     }
   ],
   "packageRules": [
@@ -55,6 +63,11 @@
     {
       "matchPackageNames": ["https://github.com/ironcore-dev/boot-operator"],
       "groupName": "boot-operator",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["ghcr.io/ironcore-dev/fedhcp"],
+      "groupName": "fedhcp",
       "automerge": false
     }
   ]
