@@ -19,3 +19,7 @@ configMapGenerator:
   - packages/bios-1.1.0.json
   - packages/bmc-1.0.0.json
   - packages/bmc-1.1.0.json
+
+images:
+- name: nginx
+  newTag: 1.27.5-alpine
