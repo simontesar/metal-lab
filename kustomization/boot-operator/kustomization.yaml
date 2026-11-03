@@ -11,4 +11,4 @@ patches:
 images:
 - name: controller
   newName: ghcr.io/ironcore-dev/boot-operator
-  newTag: sha-8cb11a7
+  newTag: sha-8cb11a7 # 8cb11a7785cc02a7acbbf1be6d0228b0dab96a3d
