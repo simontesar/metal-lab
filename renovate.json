@@ -1,0 +1,116 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "enabledManagers": ["custom.regex", "dockerfile"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "metal-maintenance-operator kustomize base ref tracking main",
+      "managerFilePatterns": ["/^kustomization/metal-maintenance-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["github\\.com/ironcore-dev/metal-maintenance-operator//config/default\\?ref=(?<currentDigest>[0-9a-f]{40})"],
+      "depNameTemplate": "metal-maintenance-operator",
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-maintenance-operator",
+      "datasourceTemplate": "git-refs",
+      "currentValueTemplate": "main"
+    },
+    {
+      "customType": "regex",
+      "description": "metal-maintenance-operator image sha-tag tracking main",
+      "managerFilePatterns": ["/^kustomization/metal-maintenance-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["newTag: sha-[0-9a-f]{7} # (?<currentDigest>[0-9a-f]{40})"],
+      "depNameTemplate": "metal-maintenance-operator-image",
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-maintenance-operator",
+      "datasourceTemplate": "git-refs",
+      "currentValueTemplate": "main",
+      "autoReplaceStringTemplate": "newTag: sha-{{{newDigestShort}}} # {{{newDigest}}}"
+    },
+    {
+      "customType": "regex",
+      "description": "boot-operator kustomize base ref tracking main",
+      "managerFilePatterns": ["/^kustomization/boot-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["github\\.com/ironcore-dev/boot-operator//config/default\\?ref=(?<currentDigest>[0-9a-f]{40})"],
+      "depNameTemplate": "boot-operator",
+      "packageNameTemplate": "https://github.com/ironcore-dev/boot-operator",
+      "datasourceTemplate": "git-refs",
+      "currentValueTemplate": "main"
+    },
+    {
+      "customType": "regex",
+      "description": "boot-operator image sha-tag tracking main",
+      "managerFilePatterns": ["/^kustomization/boot-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["newTag: sha-[0-9a-f]{7} # (?<currentDigest>[0-9a-f]{40})"],
+      "depNameTemplate": "boot-operator-image",
+      "packageNameTemplate": "https://github.com/ironcore-dev/boot-operator",
+      "datasourceTemplate": "git-refs",
+      "currentValueTemplate": "main",
+      "autoReplaceStringTemplate": "newTag: sha-{{{newDigestShort}}} # {{{newDigest}}}"
+    },
+    {
+      "customType": "regex",
+      "description": "FeDHCP image tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/fedhcp/kustomization\\.yaml$/"],
+      "matchStrings": ["newName: (?<depName>ghcr\\.io/ironcore-dev/fedhcp)\\s+newTag: (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "metal-operator kustomize base ref tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/metal-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["github\\.com/ironcore-dev/metal-operator//config/default\\?ref=(?<currentDigest>[0-9a-f]{40}) # (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "depNameTemplate": "metal-operator",
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-operator",
+      "datasourceTemplate": "git-tags",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "metal-operator images tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/metal-operator/kustomization\\.yaml$/"],
+      "matchStrings": ["newName: ghcr\\.io/ironcore-dev/(?<depName>metal-operator-controller-manager|metaldata)\\s+newTag: (?<currentValue>v\\d+\\.\\d+\\.\\d+)"],
+      "packageNameTemplate": "https://github.com/ironcore-dev/metal-operator",
+      "datasourceTemplate": "git-tags",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "nginx image tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/nginx/kustomization\\.yaml$/"],
+      "matchStrings": ["- name: (?<depName>nginx)\\s+newTag: (?<currentValue>\\d+\\.\\d+\\.\\d+-alpine)"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchPackageNames": ["https://github.com/ironcore-dev/metal-maintenance-operator"],
+      "groupName": "metal-maintenance-operator",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["https://github.com/ironcore-dev/boot-operator"],
+      "groupName": "boot-operator",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["ghcr.io/ironcore-dev/fedhcp"],
+      "groupName": "fedhcp",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["https://github.com/ironcore-dev/metal-operator"],
+      "groupName": "metal-operator",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["nginx"],
+      "groupName": "nginx",
+      "automerge": false
+    },
+    {
+      "matchFileNames": ["kustomization/tftp/Dockerfile"],
+      "groupName": "tftp",
+      "automerge": false
+    }
+  ]
+}
