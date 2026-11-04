@@ -13,17 +13,32 @@ on:
     - 'Makefile'
     - '.github/workflows/publish-metalprobe-image.yml'
   pull_request:
-    paths:
-    - 'metalprobe-image/**'
-    - 'Makefile'
-    - '.github/workflows/publish-metalprobe-image.yml'
     types: [opened, synchronize, reopened]
 
 jobs:
+  changes:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: read
+    outputs:
+      metalprobe: ${{ steps.filter.outputs.metalprobe }}
+    steps:
+    - name: Filter changed paths
+      id: filter
+      if: github.event_name == 'pull_request'
+      uses: dorny/paths-filter@v4
+      with:
+        filters: |
+          metalprobe:
+          - 'metalprobe-image/**'
+          - 'Makefile'
+          - '.github/workflows/publish-metalprobe-image.yml'
+
   publish:
+    needs: changes
     if: |
       github.event_name == 'push' ||
-      github.event_name == 'pull_request' ||
+      (github.event_name == 'pull_request' && needs.changes.outputs.metalprobe == 'true') ||
       (github.event_name == 'release' && github.event.action == 'published')
     # Pinned: ubuntu-latest (26.04) ships gcc defaulting to -march=x86-64-v3,
     # which leaks into the x86 EFI stub and makes it fault (#UD) on qemu64.
