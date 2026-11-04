@@ -71,6 +71,14 @@
       "packageNameTemplate": "https://github.com/ironcore-dev/metal-operator",
       "datasourceTemplate": "git-tags",
       "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)\\.(?<patch>\\d+)$"
+    },
+    {
+      "customType": "regex",
+      "description": "nginx image tracking tagged releases",
+      "managerFilePatterns": ["/^kustomization/nginx/kustomization\\.yaml$/"],
+      "matchStrings": ["- name: (?<depName>nginx)\\s+newTag: (?<currentValue>\\d+\\.\\d+\\.\\d+-alpine)"],
+      "datasourceTemplate": "docker",
+      "versioningTemplate": "docker"
     }
   ],
   "packageRules": [
@@ -92,6 +100,11 @@
     {
       "matchPackageNames": ["https://github.com/ironcore-dev/metal-operator"],
       "groupName": "metal-operator",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["nginx"],
+      "groupName": "nginx",
       "automerge": false
     }
   ]
