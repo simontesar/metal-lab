@@ -1,7 +1,8 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
-  "enabledManagers": ["custom.regex", "dockerfile"],
+  "enabledManagers": ["custom.regex", "dockerfile", "gomod"],
+  "postUpdateOptions": ["gomodTidy"],
   "customManagers": [
     {
       "customType": "regex",
@@ -110,6 +111,12 @@
     {
       "matchFileNames": ["kustomization/tftp/Dockerfile"],
       "groupName": "tftp",
+      "automerge": false
+    },
+    {
+      "matchManagers": ["gomod"],
+      "matchFileNames": ["metalprobe-image/go.mod"],
+      "groupName": "metalprobe-image go modules",
       "automerge": false
     }
   ]
