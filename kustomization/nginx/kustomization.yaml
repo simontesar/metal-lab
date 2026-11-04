@@ -22,4 +22,4 @@ configMapGenerator:
 
 images:
 - name: nginx
-  newTag: 1.27.5-alpine
+  newTag: 1.31.8-alpine
