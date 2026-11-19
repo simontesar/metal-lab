@@ -80,6 +80,16 @@
       "matchStrings": ["- name: (?<depName>nginx)\\s+newTag: (?<currentValue>\\d+\\.\\d+\\.\\d+-alpine)"],
       "datasourceTemplate": "docker",
       "versioningTemplate": "docker"
+    },
+    {
+      "customType": "regex",
+      "description": "kbake go install commit tracking main",
+      "managerFilePatterns": ["/^Makefile$/"],
+      "matchStrings": ["go install github\\.com/ironcore-dev/kbake@(?<currentDigest>[0-9a-f]{40})"],
+      "depNameTemplate": "kbake",
+      "packageNameTemplate": "https://github.com/ironcore-dev/kbake",
+      "datasourceTemplate": "git-refs",
+      "currentValueTemplate": "main"
     }
   ],
   "packageRules": [
@@ -117,6 +127,11 @@
       "matchManagers": ["gomod"],
       "matchFileNames": ["metalprobe-image/go.mod"],
       "groupName": "metalprobe-image go modules",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["https://github.com/ironcore-dev/kbake"],
+      "groupName": "kbake",
       "automerge": false
     }
   ]
