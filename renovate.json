@@ -90,6 +90,19 @@
       "packageNameTemplate": "https://github.com/ironcore-dev/kbake",
       "datasourceTemplate": "git-refs",
       "currentValueTemplate": "main"
+    },
+    {
+      "customType": "regex",
+      "description": "metalprobe Linux kernel tracking stable releases",
+      "managerFilePatterns": ["/^metalprobe-image/Kernelfile$/", "/^Makefile$/"],
+      "matchStrings": [
+        "from: git://git\\.kernel\\.org/pub/scm/linux/kernel/git/stable/linux@(?<currentValue>v\\d+\\.\\d+(?:\\.\\d+)?)",
+        "KBAKE_KERNEL_TAG\\s*\\?=\\s*(?<currentValue>v\\d+\\.\\d+(?:\\.\\d+)?)"
+      ],
+      "depNameTemplate": "linux",
+      "packageNameTemplate": "https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git",
+      "datasourceTemplate": "git-tags",
+      "versioningTemplate": "regex:^v(?<major>\\d+)\\.(?<minor>\\d+)(?:\\.(?<patch>\\d+))?$"
     }
   ],
   "packageRules": [
@@ -132,6 +145,11 @@
     {
       "matchPackageNames": ["https://github.com/ironcore-dev/kbake"],
       "groupName": "kbake",
+      "automerge": false
+    },
+    {
+      "matchPackageNames": ["https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git"],
+      "groupName": "linux kernel",
       "automerge": false
     }
   ]
