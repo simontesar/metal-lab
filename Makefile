@@ -234,7 +234,7 @@ bmc-delete: ## Delete BMC + BMCSecret for node1 and node2
 metalprobe-image-tools: ## Install u-root, ironcore-image, and kbake
 	cd metalprobe-image && go install github.com/u-root/u-root@v0.16.0
 	cd metalprobe-image && go install github.com/ironcore-dev/ironcore-image/cmd/ironcore-image@v0.5.0
-	cd metalprobe-image && go install github.com/ironcore-dev/kbake@5ec65c0d5d780e4a2c36c736c3684314c16250e6
+	cd metalprobe-image && go install github.com/ironcore-dev/kbake@2fbf35208ef0a5f2d06dd3e69cb3200ebcc4a981
 
 metalprobe-image-build: metalprobe-image-tools ## Build the metalprobe u-root boot image
 	cd metalprobe-image && ./hack/build.sh -k "$(KBAKE_KERNEL_TAG)" -o ./bin/initramfs.cpio
