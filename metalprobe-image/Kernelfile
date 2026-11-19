@@ -45,4 +45,4 @@ actions:
 # faults (#UD) on baseline CPUs such as qemu64.
 - if: ${{ arch == 'amd64' }}
   actions:
-  - addCompilerFlags: { flags: [-march=x86-64] }
+  - setCompilerFlags: { flags: [-march=x86-64] }
