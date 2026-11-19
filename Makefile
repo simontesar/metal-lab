@@ -20,7 +20,7 @@ CERT_MANAGER_VERSION ?= v1.17.1
 CERT_MANAGER_MANIFEST ?= https://github.com/cert-manager/cert-manager/releases/download/$(CERT_MANAGER_VERSION)/cert-manager.yaml
 KIND_CLUSTER_NAME ?= k8s
 TFTP_IMG ?= tftp:latest
-KBAKE_KERNEL_TAG        ?= v7.1
+KBAKE_KERNEL_TAG        ?= v7.3.5
 METALPROBE_IMAGE_NAME   ?= ghcr.io/simontesar/metal-lab/metalprobe
 METALPROBE_IMAGE_TAG    ?= dev
 
