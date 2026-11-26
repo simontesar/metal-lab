@@ -2,7 +2,7 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
 resources:
-- https://github.com/ironcore-dev/boot-operator//config/default?ref=dd8b0d6b4072d6eb7ec6059abad3028e115c5f14
+- https://github.com/ironcore-dev/boot-operator//config/default?ref=75d0ef6e8d8434d1610cca85f5259a58fcb85d0c
 - service.yaml
 
 patches:
@@ -11,4 +11,4 @@ patches:
 images:
 - name: controller
   newName: ghcr.io/ironcore-dev/boot-operator
-  newTag: sha-dd8b0d6 # dd8b0d6b4072d6eb7ec6059abad3028e115c5f14
+  newTag: sha-75d0ef6 # 75d0ef6e8d8434d1610cca85f5259a58fcb85d0c
